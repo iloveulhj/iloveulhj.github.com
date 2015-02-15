@@ -314,6 +314,8 @@ The steps 1 - 7 are repeated recursively for every part I, part II, and part III
 
 출처 : 위키피디아
 
+---
+
 **참고 사이트**  
 [`OpenJDK-7u40-b43(Grepcode)`](http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/7u40-b43/java/util/Collections.java#Collections.sort%28java.util.List%2Cjava.util.Comparator%29)  
 [`Timsort(Wikipedia)`](http://en.wikipedia.org/wiki/Timsort)  

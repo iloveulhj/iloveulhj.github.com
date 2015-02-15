@@ -95,4 +95,6 @@ ex) mvn org.apache.maven.plugins:compiler:compile
 - settings.xml에 `<pluginGroups>``<pluginGroup>`를 통해 관리하면 $name:goal 형식으로 실행 가능 
 ex) compiler:compile  
 
+---
+
 출처: `박재성, "자바 세상의 빌드를 이끄는 메이븐", 한빛미디어, 2011` 
