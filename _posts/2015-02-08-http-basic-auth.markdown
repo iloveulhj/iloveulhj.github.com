@@ -54,8 +54,8 @@ HTTP에는 "기본 인증" 과 "다이제스트 인증"이 있다.
 ---
 
 #보안 영역
-서버가 클라이언트로 인증 요구를 할 때, realm 지시자가 기술 되어 있는 WWW-Authenticate헤더를 전송한다.  
-웹 서버는 기밀문서를 보안 영역(realm) 그룹으로 나눈다. 보안 영역은 저마다 다른 사용자 권한을 요구한다.
+서버가 클라이언트로 인증 요구를 할 때, realm 지시자가 기술 되어 있는 WWW-Authenticate헤더를 전송  
+웹 서버는 기밀문서를 보안 영역(realm) 그룹으로 나눈다. 보안 영역은 저마다 다른 사용자 권한을 요구  
 
     HTTP/1.0 401 Unauthorized
     WWW-Authenticate: Basic realm="Corporate Financials"
