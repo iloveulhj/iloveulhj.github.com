@@ -55,10 +55,10 @@ categories: jekyll update
 
 - 서버가 클라이언트로 인증 요구를 할 때, realm 지시자가 기술 되어 있는 WWW-Authenticate헤더를 전송  
 - 웹 서버는 기밀문서를 보안 영역(realm) 그룹으로 나눈다. 보안 영역은 저마다 다른 사용자 권한을 요구
-
-    HTTP/1.0 401 Unauthorized
-    WWW-Authenticate: Basic realm="Corporate Financials"
-
+  
+        HTTP/1.0 401 Unauthorized   
+        WWW-Authenticate: Basic realm="Corporate Financials"
+  
 - remalm은 위의 예시와 같이 해설 형식으로 돼어 사용자가 권한 범위를 이해하는데 도움이 되어야 한다.  
 - `"executive-committee@bigcompany.com"`과 같은 서버의 호스트명을 넣는 것도 유용할 수 있다.  
 
