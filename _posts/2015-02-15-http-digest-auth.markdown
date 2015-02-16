@@ -26,7 +26,7 @@ categories: jekyll update
 **단방향 다이제스트**  
 
 - 다이제스트(요약)는 단방향 함수로 동작, 무한 가지의 모든 입력값을 유한의 범위로 압축 변환
-- MD5(메시지 다이제스트 #5), SAH(Secure Hash Algorithm)...
+- MD5(메시지 다이제스트 #5), SHA(Secure Hash Algorithm)...
 - 요약함수는 보통 cryptographic checksums로 불림, 단반향 해시 함수이거나 fingerprint function임
 
 **재전송 방지를 위한 난스 사용**
