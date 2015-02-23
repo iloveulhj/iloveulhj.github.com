@@ -1,47 +1,40 @@
 ---
 layout: post
-title:  "[IDE]  Eclipse 성능 최적화"
+title:  "[Article]  HTTP/2 finished, coming to browsers within weeks"
 date:   2015-02-22 00:00:00
 categories: jekyll update
 ---
 
-이 포스트는 [SLiPP 스터디](http://www.slipp.net/wiki/pages/viewpage.action?pageId=5177633)의 위키 페이지에 정리된 내용입니다.
+이 포스트는 [http://arstechnica.com/](http://arstechnica.com/information-technology/2015/02/http2-finished-coming-to-browsers-within-weeks/)에 올라온 기사를 번역한 내용입니다.  
+개인적인 이해를 목적으로 작성하였으며 오역이 있을 수 있으므로 기사 원문을 참고하기를 바랍니다.
+
+---
+The Internet Engineering Task Force의 HTTP working group이 웹의 코어인 HTTP/1.0, HTTP/1.1 프로토콜의 후속인 Hypertext Transfer Protocol 2를 마무리 지었다.
+
+워킹그룹은 정확히는 두 개의 관련된 명세를 마무리지었다. 첫 번째는 HTTP/2이고, 두 번째는 HTTP/2 헤더의 압축에 관한 명세인 HPACK이다.
+
+HTTP/2는 2012년 구글의 SPDY 프로토콜의 개발에 응답하여 시작하였다. 구글은 기존의 HTTP가 가진 성능상 문제를 다루기 위해 SPDY를 만들었다.
+
+아마 HTTP/1.x의 가장 큰 이슈는 여러 개의 리소스를 동시에 받을 때 여러 개의 커넥션을 사용하는 점일 것이다. 하나의 HTTP/1.x 커넥션을 이용해 여러 개의 다른 오브젝트(이미지, CSS, JS, HTML 등)를 요청하면 그 오브젝트들은 순서대로, 하나가 끝나면 다른 하나가 순서대로 다루어진다. 만약 하나의 오브젝트를 요청할 때 많은 시간을 소비하면 다른 모든 오브젝트들은 기다려야만 한다.
+
+결과적으로 대부분의 HTTP/1.x 커넥션은 하나의 오브젝트를 요청하는데 사용된다. 웹 클라이언트는 병렬로 각 오브젝트의 서버에 커넥션을 생성하여 필요한 오브젝트들을 로딩한다. 그러나 이것은 각각의 커넥션이 클라이언트에서 서버로 요청하고 다시 응답을 받는데에 추가적인 네트워크 리소스가 사용된다. 
+
+HTTP/2는 이 이슈를 다룬다. HTTP/2에서는 여러 개의 양방향 스트림이 한 개의 TCP 커넥션에 있게 된다. 각각의 스트림은 한 개의 요청/응답 쌍을 처리할 수 있고, 하나의 서버로의 여러개의 요청은 여러개의 스트림을 만들 수 있다. 그러나 각각의 스트림은 모두 독립적이고, 만약 하나의 스트림이 느리더라도, HTTP/2 커넥션은 다른 스트림에 속한 데이터를 전송할 수 있다. 비슷하게 하나의 클라이언트는 큰 오브젝트와 작은 오브젝트를 요청할 수 있고, 작은 오브젝트가 전송되거나, 전송중일 때도 큰 오브젝트가 전송될 수 있다. HTTP/1.x의 순차적인 절차는 HTTP/2에서는 필요하지 않다. 명세에는 클라이언트가 1개의 커넥션에서 100개의 다른 스트림을 지원하도록 권고한다.
+
+HTTP2에는 성능 향상을 위해 몇 가지 변화가 생겼다. 기존 HTTP/1.x는 요청과 응답이 사람들이 읽을 수 있는 텍스트 기반 프로토콜이다. HTTP/2는 바이너리 프로토콜로 사람이 읽지 못하는 연속적인 프레임 형태로 TCP 커넥션 위에 전송되어진다. HTTP/2는 서버가 클라이언트의 초기화 요청 없이도 클라이언트에게 스트림을 푸쉬할 수 있게 허용한다.
+
+바이너리 프로토콜이더라도 HTTP/2의 구조는 변화하지 않았다. 요청과 응답은 헤더와 바디로 나누어져 있고 헤더는 바디에 대한 메타데이터를 제공한다. HTTP/2 프로토콜을 동일한 메세지를 더 효율적인 통신을 할 수 있도록 디자인한 새로운 표현 방법이다.
+
+HTTP/2는 많은 부분을 Google의 SPDY에 기초로 하고 있다. SPDY는 HTTP/2에서는 하지 않는 몇 가지 일들을 하고 있다. SPDY는 프라이버시와 보안을 위해 Transport Layer Security(TLS)를 사용하도록 요구한다. HTTP/2에서는 옵션이다; HTTP/2는 TLS위에서, 기본 TCP위에서도 동작할 수 있다. 그러나 몇몇 벤더들은 프라이버시를 위해 HTTP/2 구현체들은 오직 암호화된 TLS위에서만 동작하도록 지원할 예정이다.
+
+SPDY는 초기에 gzip을 통한 요헤더 압축을 사용했다. 그러나 2012년에 gzip을 이용한 압축이 CRIME이라 불리우는 공격에 위험하다는 것이 알려졌다. SPDY는 HPACK을 이용하고 gzip을 사용하지 않도록 변경하였다. HTTP/2는 두 번째 명세인 HPACK를 이용한다.
+
+HPACK은 HTTP/2 커넥션에서 CRIME을 피하는 HTTP 헤더의 압축 방법이다. 일반적인 압축 알고리즘인 gzip과는 다르게 HPACK는 HTTP/2의 목적에 맞게 디자인되었다.
+
+IETF의 HTTP/2의 사인오프와 함께 다음 과정은 HTTP/2와 HPACK의 내용을 RFC로 공식적으로 발표하는 것이다. 
+
+브라우저들은 그들의 방법으로 새로운 명세를 지원하기로 하였다. 크롬40은 HTTP/2의 지원을 포함할 예정이다. 구글은 이번달 초에 2016년까지 SPDY의 지원을 중단하겠다고 발표하였다.  모질라는 파이어폭스36(다음주 릴리즈 버전) HTTP/2 커넥션의 드래프트 14, 15를 지원할 예정이다. 파이어폭스 37과 38에는 드래프트 16을 추가할 것이다. 마지막 버전인 드래프트 17은 금방 지원할 예정이다. 윈도우 10 기술 프리뷰는 드래프트 14를 지원하고 있다. 그리고 IE를 대체할 스파르탄 브라우저는 HTTP/2를 지원을 포함할 예정이다.
 
 ---
 
-# eclipse.ini 설정 
-        -Xverify:none           유효성 검사 생략  
-        -XX:+UseParallelGC      병렬 처리  
-        -XX:-UseConcMarkSweepGC 컴파일러의 소수점 최적화 기능 활성화   
-        -XX:PermSize=64M        Perment generation size  
-        -XX:MaxPermSize=512M    Max permanent generation size  
-        -XX:MaxNewSize=512M     New generation  
-        -XX:NewSize=128M        Max new generation  
-        -Xms1024m               이클립스 heap memory size min  
-        -Xmx1024m               이클립스 heap memory size max  
-        
-        
-# 소스 자동 폴딩 해제
-        Java > Editor > Folding > Enable folding
-
-# 코드 자동완성기능 해제
-        Java > Editor > Content Assist > Enable auto activation
-
-# Spelling 체크 설정 해제
-        General > Editors > Text Editors >  Spelling > Enable spell checking
-
-# Validation 설정 해제
-        validation
-
-# 불필요한 플러그인 삭제
-        Install/Update > Uninstall or update
-
-# 이클립스 구동 속도 개선
-        General > Startup and Shutdown > Plug-ins activated on startup
-
-# 자동 업데이트 해제
-        Intall/Update > Automatic Updates
-
----
-
-출처 : [SLiPP 스터디, http://www.slipp.net/wiki/display/SLS/Home](http://www.slipp.net/wiki/pages/viewpage.action?pageId=5177633)
+출처 : [Peter Bright, "HTTP/2 finished, coming to browsers within weeks", Arstechnica, Feb 19 2015](http://arstechnica.com/information-technology/2015/02/http2-finished-coming-to-browsers-within-weeks/)
