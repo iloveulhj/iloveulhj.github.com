@@ -1,0 +1,147 @@
+---
+layout: post
+title:  "[OAuth] OAuth 2.0"
+date:   2015-03-01 00:00:00
+categories: jekyll update
+---
+
+---
+
+# OAuth
+
+- 인증을 위한 오픈 스탠더드 프로토콜
+- 인터넷 서비스의 기능을 다른 어플리케이션에서도 사용할 수 있게 API 접근 위임(API Access Delegation)
+- OAuth1.0, OAuth1.0a, OAuth2.0
+- OAuth 1.0: 2007년 10월 확정, session fixation attack 보안 결함
+- OAuth 1.0a: 보안 문제 개선(2009년 6월), The OAuth 1.0 Protocol(RFC5849) 표준(2010 4월)
+- OAuth 2.0: The Ouath 2.0 Authorization Framework(RFC6749) 표준(2012년 10월)
+
+--- 
+
+# OAuth 2.0의 개선점
+
+**간결성**  
+
+- OAuth 1.0a https가 필수가 아니었기 때문에 signature를 생성해서 호출애햐 했음
+- OAuth 1.0a API의 테스트가 힘듬
+- OAuth 2.0의 Bearer 토큰 인증 방식은 더 이상 signature가 필요 없음
+- API의 테스트가 간단해짐
+
+**다양한 인증 방법 지원**  
+
+- OAuth1.0은 HMAC을 이용한 암호화 인증 방식만 제공
+- OAuth2.0은 시나리오별로 다양한 인증 방식을 제공
+- 웹 브라우저, 모바일 등
+
+**대형 서비스로 확장성 지원**  
+- API 서버와 인증 서버의 역할을 분리
+- 인증 서버 분리, 인증 서버 다중화등을 고려
+
+---
+
+# Role
+
+- Resource owner: 사용자
+- Resource server: API 서버
+- Client: 써드파티 어플리케이션
+- Authorization server: 인증 서버
+
+--- 
+
+# 다양한 인증 방식
+
+- Confidental Client: 웹 서버가 API를 호출하는 경우와 같이 client 증명서(client_secret)를 안전하게 보관할 수 있는 클라이언트
+- Public Client:  
+-- 브라우저 기반 어플리케이션, 모바일 어플리케이션과 같이 client 증명서를 안전하게 보관할 수 없는 경우  
+-- redirect_uri를 통해서 client를 인증
+
+
+		Password Crendentials Grant와 Client Credentials Grant는  
+		기본적으로 우리가 생각하는 OAuth 프로세르를 사용하지 않음  
+		반드시 인증된 client에만 사용하고 가능하면 사용하지 않는 편이 좋음
+
+
+---
+
+**Authorization Code Grant** 
+
+![](/images/oauth/oauth2.0_1.png)  
+
+> 그림1. Authorization Code Grant Flow  
+> 자료 출처: [RFC6749 -  The OAuth 2.0 Authorization Framework, http://tools.ietf.org/html/rfc6749](http://tools.ietf.org/html/rfc6749)
+
+- 웹 서버에서 API를 호출하는 등의 시나리오에서 onfidental Client가 사용하는 방식
+- 서버 사이드 코드가 필요한 인증 방식, client_secret가 필요
+- 로그인시에 페이지 URL에 response_type=code를 넘김
+
+---
+
+**Implicit Grant**  
+
+![](/images/oauth/oauth2.0_2.png)  
+
+> 그림2. Implicit Grant Flow  
+> 자료 출처: [RFC6749 -  The OAuth 2.0 Authorization Framework, http://tools.ietf.org/html/rfc6749](http://tools.ietf.org/html/rfc6749)
+
+- token, scope 스펙은 다르나 OAuth1.0a와 가장 비슷한 인증 방식
+- Public Client인 브라우저 기반 어플리케이션, 모바일 어플리케이션에서 사용
+- client_secret가 필요 없음, 가장 많이 사용되는 방식
+- 로그인시에 페이지 URL에 response_type=token을 넘김
+
+---
+
+**Password Credentials Grant**  
+
+![](/images/oauth/oauth2.0_3.png)  
+
+> 그림3. Password Credentials Grant Flow  
+> 자료 출처: [RFC6749 -  The OAuth 2.0 Authorization Framework, http://tools.ietf.org/html/rfc6749](http://tools.ietf.org/html/rfc6749)
+
+- 2-leggend 인증 방식
+- client에 아이디/패스워드를 저장, 직접 access token을 받아오는 방식
+- client를 믿을 수 없을 때에는 사용하기 위험
+- 로그인시에 API에 POST로 grant_type=password라고 넘김
+
+--- 
+
+**Client Credentials Grant**  
+
+![](/images/oauth/oauth2.0_4.png)  
+
+> 그림4. Client Credentials Grant Flow  
+> 자료 출처: [RFC6749 -  The OAuth 2.0 Authorization Framework, http://tools.ietf.org/html/rfc6749](http://tools.ietf.org/html/rfc6749)
+
+- 어플리케이션이 Confidential Client일 때 id와 secret를 가지고 인증하는 방식  
+- 로그인시에 API에 POST로 grant_type=client_credentials라고 넘김  
+
+---
+
+# Access token
+
+- OAuth 2.0은 기본적으로 Bearer토큰(암호화 하지 않은 토큰)으로 인증
+- HTTPS를 사용하기 때문에 토큰의 안전은 HTTPS에 의존
+- 복잡한 signature를 생성할 필요가 없음
+
+--- 
+
+# Refresh token
+
+- 클라이언트가 같은 access token을 오래 사용하면 해킹에 노출된 위험이 큼
+- access token의 만료 기간을 짧게 하고, 만료가 되면 refresh token으로 access token을 갱신하는 방법
+
+---
+
+# Scope
+
+- API 권한 제어
+- scope의 이름이 스펙에 정의되어 있지 않으며, 여러개의 권한을 요청할 때는 콤마를 사용
+- `http://example.com/oauth?….&scope=read_article,update_profile`
+
+---
+
+출처:  
+
+- [핼로우 월드, http://helloworld.naver.com](http://helloworld.naver.com/helloworld/textyle/24942) 
+- [linuxism Blot, http://linuxism.tistory.com/1545](http://linuxism.tistory.com/1545)
+- [RFC6749 -  The OAuth 2.0 Authorization Framework, http://tools.ietf.org/html/rfc6749](http://tools.ietf.org/html/rfc6749)
+- [Daum 개발자 센터, http://developer.naver.com](http://developers.daum.net/services/apis/docs/oauth2_0/reference)
