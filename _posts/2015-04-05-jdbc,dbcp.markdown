@@ -1,0 +1,41 @@
+---
+layout: post
+title:  "[Java] JDBC, DBCP"
+date:   2015-04-05 00:00:00
+categories: jekyll update
+---
+
+## JDBC, DBCP
+
+---
+
+* 자바 개발을 하다보면 여러 종류의 DB를 접하게 된다.
+* DB에서 JDBC를 제공하는지, DBCP를 지원하는지에 대해 문의하는 경우를 보곤한다.
+* JDBC와 DBCP의 개념에 대해 알아보자.
+
+---
+
+**JDBC**
+
+* The Java Database Connectivity 
+* JDBC API는 databased 독립적인 JAVA와 SQL DB, data source간의 connectivity에 대한 산업 표준이다. 
+* JDBC API는 SQL 기반의 DB 접근을 위한 방법을 제공한다.
+* "Write Once, Run Anywhere"  
+* JDBC 기술을 통해서 JAVA application은 다양한 DB에 손쉽게 접근할 수 있다.
+
+---
+
+**DBCP**
+
+* Database Connection Pool
+* Connection을 새로 생성하는 것은 비용이 크다.
+* 데이터 베이스는 트랜잭션을 처리하는데 수 밀리새컨드를 걸린다.
+* 인터넷 환경에서 수 많은 유저들의 요청마다 커넥션을 생성하게 되면 성능상 매우 좋지 않다. 
+* connection들의 pool을 만들어 유저들이 공유하도록 하면 새로운 Connection을 생성하는 비용을 줄일 수 있다.
+
+---
+
+출처 :
+
+- [Oracle - JDBC, http://www.oracle.com/technetwork/java/javase/jdbc/index.html](http://www.oracle.com/technetwork/java/javase/jdbc/index.html)
+- [Apache Commons - DBCP, http://commons.apache.org/proper/commons-dbcp/](http://commons.apache.org/proper/commons-dbcp/)
