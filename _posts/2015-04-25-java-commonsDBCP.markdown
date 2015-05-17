@@ -66,7 +66,7 @@ MySQL: select 1
 
 **Evictor 스레드와 관련된 속성**
 
-Evictor 스레드는 Commons DBCp 내부에서 커넥션 자원을 정리하는 구성 요소이며 별도의 스레드로 실행된다.
+Evictor 스레드는 Commons DBCP 내부에서 커넥션 자원을 정리하는 구성 요소이며 별도의 스레드로 실행된다.
 
 `timeBetweenEvictionRunsMillis`: Evictor 스레드가 작동하는 간격. 기본값은 -1이며 Evictor 스레드의 실행이 비활성화돼 있다.  
 `numTestPerEvictionRun`: Evictor 스레드 작동 시 한 번에 검사할 커넥션의 갯수  
