@@ -27,7 +27,7 @@ HTTP2에는 성능 향상을 위해 몇 가지 변화가 생겼다. 기존 HTTP/
 
 HTTP/2는 많은 부분을 Google의 SPDY에 기초로 하고 있다. SPDY는 HTTP/2에서는 하지 않는 몇 가지 일들을 하고 있다. SPDY는 프라이버시와 보안을 위해 Transport Layer Security(TLS)를 사용하도록 요구한다. HTTP/2에서는 옵션이다; HTTP/2는 TLS위에서, 기본 TCP위에서도 동작할 수 있다. 그러나 몇몇 벤더들은 프라이버시를 위해 HTTP/2 구현체들은 오직 암호화된 TLS위에서만 동작하도록 지원할 예정이다.
 
-SPDY는 초기에 gzip을 통한 요헤더 압축을 사용했다. 그러나 2012년에 gzip을 이용한 압축이 CRIME이라 불리우는 공격에 위험하다는 것이 알려졌다. SPDY는 HPACK을 이용하고 gzip을 사용하지 않도록 변경하였다. HTTP/2는 두 번째 명세인 HPACK를 이용한다.
+SPDY는 초기에 gzip을 통한 헤더 압축을 사용했다. 그러나 2012년에 gzip을 이용한 압축이 CRIME이라 불리우는 공격에 위험하다는 것이 알려졌다. SPDY는 HPACK을 이용하고 gzip을 사용하지 않도록 변경하였다. HTTP/2는 두 번째 명세인 HPACK를 이용한다.
 
 HPACK은 HTTP/2 커넥션에서 CRIME을 피하는 HTTP 헤더의 압축 방법이다. 일반적인 압축 알고리즘인 gzip과는 다르게 HPACK는 HTTP/2의 목적에 맞게 디자인되었다.
 
