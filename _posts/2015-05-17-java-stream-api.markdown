@@ -240,6 +240,83 @@ boolean aWordStartWithS = stream.anyMatch(s -> s.startsWith("S"));
 
 # 옵션 타입
 
+Optional<T> 객체는 T 타입 객체 또는 객체가 없는 경우의 래퍼다.
+
+**Optional\<T>.get()**   
+get 메서드는 감싸고 있는 요소가 존재할 때는 요소를 반환하고 없을 경우는 NoSuchElementException을 던진다. 
+{% highlight java %} 
+Optional<T> optionalValue = ...;
+optionalValue.get().someMethod();
+{% endhighlight %}
+
+그러므로 위 예제는 다음 예제보다 안전할 것이 없다. 
+{% highlight java %}
+T value = ...;
+value.someMethod();
+{% endhighlight %}
+
+**Optional\<T>.isPresent()**  
+isPresent 메서드는 Optional<T> 객체가 값을 포함하는지 알려준다.
+{% highlight java %}
+if(optionalValue.isPresent()) {
+	optionalValue.get().someMethod();
+}
+{% endhighlight %}
+
+하지만 다음 예제와 크게 달라보이진 않는다.
+{% highlight java %}
+if(value != null) {
+	value.someMethod();
+}
+{% endhighlight %}
+
+**Optional\<T>.ifPresent()**
+{% highlight java %}
+// 옵션 값이 존재하면 해당 함수로 전달되며, 그렇지 않으면 아무 일도 일어나지 않음
+optionalValue.ifPresent( v -> results.add(v));
+optionalValue.ifPresent(results::add);
+{% endhighlight %}
+
+**Optional\<T>.map()**
+{% highlight java %}
+// 값이 존재하면 해당 함수를 호출한 후, Optional<T>를 리턴
+// added에는 true, false, null을 가진 Optional을 가질 수 있음
+Optional<Boolean> added = optionalValue.map(results::add);
+{% endhighlight %}
+
+
+**Optional\<T>.orElse()**
+{% highlight java %}
+// 감싸고 있는 문자열, 또는 문자열이 없는 경우는 ""를 리턴
+String result = optionalValue.orElse("");
+{% endhighlight %}
+
+**Optional\<T>.orElseGet()**
+{% highlight java %}
+// 감싸고 있는 문자열, 또는 문자열이 없는 경우는 함수를 호출
+String result = optionalValue.orElseGet(() -> System.getProperty("user.dir"));
+{% endhighlight %}
+
+**Optional\<T>.orElseThrow()**
+{% highlight java %}
+// 감싸고 있는 문자열, 또는 문자열이 없는 경우는 예외를 발생
+String result = optionalValue.orElseThrow(NoSuchElementException::new);
+{% endhighlight %}
+
+**Optional\<T>.of(), Optional\<T>.empty()**
+{% highlight java %}
+public static Optional<Double> inverse(Double x) {
+	return x == 0 ? Optional.empty() : Optional.of(1 / x);
+}
+{% endhighlight %}
+
+**Optional\<T>.ofNullable()**
+{% highlight java %}
+// obj가 null이면 Optional.empty()를, null이 아니면 Optional.of(obj)를 반환
+Optional<String> optionalValue = Optional.ofNullable(obj);
+{% endhighlight %}
+
+
 ---
 
 # 리덕션 연산
@@ -267,6 +344,22 @@ boolean aWordStartWithS = stream.anyMatch(s -> s.startsWith("S"));
 ---
 
 # 함수형 인터페이스
+
+대부분의 Stream의 API는 인자로 함수형 인터페이스를 받아서 처리한다.
+람다 표현식을 사용한 다음 코드가 있다.
+{% highlight java %}
+Stream<String> filterStream = stream.filter(s -> s.length() >= 4);
+{% endhighlight %}
+
+다음은 위의 예제를 람다 표현식을 이용하지 않고 기존의 스타일로 변경한 코드이다.
+{% highlight java %}
+Stream<String> filterStream = stream.filter(new Predicate<String>() {
+	@Override
+	public boolean test(String s) {
+		return s.length() >= 4;
+	}
+});
+{% endhighlight %}
 
 * java.util.function.*
 * 스트림 API의 대부분은 파라미터로 함수형 인터페이스를 받음
