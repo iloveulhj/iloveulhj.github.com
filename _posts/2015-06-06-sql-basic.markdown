@@ -1,0 +1,503 @@
+---
+layout: post
+title:  "[SQL] SQL 기초"
+date:   2015-06-06 00:00:00
+categories: jekyll update
+---
+
+이 포스트는 "SQL 전문가 가이드"의 "2-1장. SQL 기본"을 학습한 내용으로 이루어져 있습니다. 
+
+---
+
+# 관계형 데이터베이스 개요
+
+#### SQL(Structured Query Language)
+
+* 관계형 데이터베이스에서 데이터 정의, 데이터 조작, 데이터 제어를 하기위해 사용하는 언어
+
+#### ANSI/ISO 표준
+
+* 대부분의 RDMBS에서 ANSI/ISO 표준을 따름
+* SQL에 대한 지식은 여러 다른 데이터베이스를 사용하더라도 상당 부분 재활용 가능
+* ANSI/ISO SQL-99, SQL-2003 이후 기준이 적용된 SQL이라면 프로그램의 이식성을 높이는데 기여
+* 상호 호환성이 뛰어난 표준 기능, 벤더별 특징을 가진 독자정 기능 중 선택은 사용자의 몫
+
+#### SQL 문장들의 종류
+
+* DML: Data Manipulation Language
+    * SELECT
+    * INSERT
+    * UPDATE
+    * DELETE
+* DDL: Data Definition Language
+    * CREATE
+    * ALTER
+    * DROP
+    * RENAME
+* DCL: Data Control Language
+    * GRANT
+    * REVOKE
+* TCL: Transaction Control Language
+    * COMMIT
+    * ROLLBACK
+
+#### TABLE
+
+* 테이블은 데이터를 저장하는 객체로서 데이터베이스의 기본 단위
+* 관계형 데이터베이스에서 모든 데이터는 칼럼과 행으로 이루어진 2차원 구조
+    * Column: 2차원 구조를 가진 테이블에서 세로 방향으로 이루어진 하나하나의 특정 속성
+    * Row: 2차원 구조를 가진 테이블에서 가로 방향으로 이루어진 연결된 데이터
+    * Field: 칼럼과 행이 겹치는 하나의 공간
+    
+* 정규화(Normalization): 테이블을 분할하여 데이터의 정합성을 확보하고, 불필요한 중복을 줄이는 프로세스
+* 기본키(Primarky Key): 테이블에 존재하는 각 행을 한 가지 의미로 특정할 수 있는 한 개 이상의 칼럼
+* 외부키(Foreign Key): 다른 테이블의 기본키로 사용되고 있는 관계를 연결하는 칼럼
+
+#### ERD(Entity Relationship Digram)
+
+* 관계의 의미를 직관적으로 표현할 수 있음
+* 테이블 간 서로의 상관 관계를 그림을 도식화
+* 엔티티, 관계, 속성으로 이루어짐
+* IE(Information Engineering), Barker(Case*Method) 표기법 등이 존재
+
+---
+
+# DDL(Data Definition Language)
+
+#### 데이터 유형
+테이블의 칼럼이 가지고 있는 대표적인 4가지 데이터 유형이다. 
+이외에도 ANSI/ISO에서는 다양한 유형을 정의하고 있다.
+벤더별로 SQL 문장의 차이는 적어지고 있지만, 데이터 유형과 내장형 함수 부분은 차이가 많은 편이다.
+문자열에 대한 최대 길이와 NUMBER 칼럼의 정밀도를 지정하는 것은 테이블 설계시 반드시 고려해야 할 중요 요소이다.
+
+* CHARACTER(s): 고정 길이 문자열 정보
+* VARCHAR(s): CHARACTER VARYING, 가변 길이 문자열 정보  
+* NUMERIC: 정수, 실수 등 숫자 정보
+* DATE: 날짜와 시각 정보
+
+#### CREATE TABLE
+{% highlight sql %}
+CREATE TABLE  PLAYER (
+PLAYER_ID     CHAR(7) NOT NULL,
+PLAYER_NAME   VARCHAR2(20) NOT NULL,
+TEAM_ID       CHAR(3) NOT NULL,
+E_PLAYER_NAME VARCHAR2(40),
+NICKNAME      VARCHAR2(30),
+JOIN_YYYY     CHAR(4),
+POSITION      VARCHAR2(10),
+BCK_NO        NUMBER(2),
+NATION        VARCHAR2(20),
+BIRTH_DATE    DATE,
+SOLAR         CHAR(1),
+HEIGHT        NUMBER(3),
+WEIGHT        NUMBER(3),
+CONSTRAINT PLAYER_PK PRIMARY KEY (PLAYER_ID),
+CONSTRAINT PLAYER_FK FOREIGN KEY (TEAM_ID) REFERENCES TEAM(TEAM_ID)
+);
+{% endhighlight %}
+
+
+#### 제약조건(CONSTRAINT)
+사용자가 원하는 조건의 데이터만 유지하기 위해 테이블의 특정칼럼에 설정하는 제약이다.
+
+* PRIMARY KEY(기본키)
+    * 테이블에 저장된 행 데이터를 고유하게 식별하기 위한 기본 키
+    * 하나의 테이블에 하나의 기본키 제약만 정의
+    * 기본 키 = 고유키 + NOT NULL
+* UNIQUE KEY(고유키)
+    * 테이블에 저장된 행 데이터를 고유하게 식별하기 위한 고유 키
+    * NULL은 고유키 제약의 대상이 아님
+* NOT NULL
+    * NULL 값의 입력을 금지
+    * CHECK의 일부분으로 이해해도 무방
+* CHECK
+    * 입력할 수 있는 값의 범위를 제한
+    * 제약으로는 TRUE, FALSE를 평가할 수 있는 논리식을 지정
+* FOREIGN KEY(외래키)
+    * 관계형 데이터베이스에서 테이블 간의 관계를 정의하기 위해 기본키를 다른 테이블의 외래키로 복사하는 경우
+    * 오래키 지정시 참조 무결성 제약 옵션을 선택할 수 있음
+* DEFAULT의 의미
+    * 데이터 입력 시에 값이 지정되어 있지 않을 경우 입력될 기본 값을 사전에 지정 가능
+
+#### 생성된 테이블 구조 확인
+{% highlight sql %}
+DESCRIBE TABLE_NAME;
+{% endhighlight %}
+
+#### SELECT 문을 통한 테이블 생성
+{% highlight sql %}
+CREATE TABLE TEAM_TEMP
+AS SELECT * FROM TEAM;
+{% endhighlight %}
+
+* CATS: CREAE TABLE ~ AS SELECT ~
+* 기존의 테이블을 이용해서 테이블 생성
+* 칼럼별로 데이터 유형을 재정의 하지 않아도 됨
+* NOT NULL만 복제 테이블에 적용
+* 기본키, 고유키, 왜래키, CHECK 등의 다른 제약 조건은 없어짐
+
+#### ALTER TABLE
+ALTER 명령어를 통해 칼럼을 추가/삭제하거나 제약조건을 추가/삭제할 수 있다.
+
+* ADD COLUMN
+{% highlight sql %}
+ALTER TABLE 테이블명
+ADD 추가할 칼럼명 데이터 유형;
+{% endhighlight %}
+
+* DROP COLUMN
+{% highlight sql %}
+ALTER TABLE 테이블명
+DROP COLUMN 삭제할 칼럼명;
+{% endhighlight %}
+
+* MODIFY COLUMN
+{% highlight sql %}
+ALTER TABLE 테이블명
+MODIFY (칼럼명1 데이터 유형 [DEFAULT 식] [NOT NULL],
+        칼럼명2 데이터 유형 ...);
+{% endhighlight %}
+
+* RENAME COLUMN
+{% highlight sql %}
+ALTER TABLE 테이블명
+RENAME COLUMN 변경할 칼럼명 TO 새로운 칼럼명;
+{% endhighlight %}
+
+* DROP CONSTRAINT
+{% highlight sql %}
+ALTER TABLE 테이블명
+DROP CONSTRAINT 제약조건명;
+{% endhighlight %}
+
+* ADD CONSTRAINT
+{% highlight sql %}
+ALTER TABLE 테이블명
+ADD CONSTRAINT 제약조건명 제약조건 (칼럼명);
+{% endhighlight %}
+
+#### RENAME TABLE
+RENAME 명령어를 사용하여 테이블의 이름을 변경할 수 있다.
+
+{% highlight sql %}
+RENAME 변경전 테이블명 TO 변경후 테이블명;
+{% endhighlight %}
+
+#### DROP TABLE
+DROP 명령어를 사용하여 테이블을 삭제 할 수 있다.
+
+* CASECADE CONSTRAINT: 해당 테이블과 관계가 있었던 참조되는 제약조건도 삭제
+{% highlight sql %}
+DROP TABLE 테이블명 [CASECADE CONSTRAINT];
+{% endhighlight %}
+
+#### TRUNCATE TABLE
+테이블에 들어있는 모든 행들이 제거되고, 저장 공간을 재사용 가능하도록 해제한다.
+
+* 테이블의 구조는 변경되지 않음
+* AUTO COMMIT
+* DELETE와 처리 방식이 다름
+* 시스템 부하가 적음 
+* 정상적인 복구가 불가능하므로 주의
+{% highlight sql %}
+TRUNCATE TABLE PLAYER;
+{% endhighlight %}
+
+---
+
+# DML(Data Manipulation Langauge)
+
+#### INSERT
+테이블에 데이터를 입력하는 방법은 두 가지 유형이 있으며 한 번에 한 건만 입력
+{% highlight sql %}
+INSERT INTO 테이블명 (COLUMN_LIST)
+VALUES (COLUMN_LIST에 넣을 VALUES_LIST)
+
+INSERT INTO 테이블명
+VALUES (전체 COLUMN에 넣을 VALUE_LIST)
+{% endhighlight %}
+
+#### UPDATE
+WHERE 절을 사용하지 않는다면 테이블의 전체 데이터가 변경된다.
+{% highlight sql %}
+UPDATE 테이블명
+SET 수정할 칼럼명 = 새로운 값;
+{% endhighlight %}
+
+#### DELETE
+WHERE 절을 사용하지 않는다면 테이블의 전체 데이터가 삭제된다.
+{% highlight sql %}
+DELETE [FROM] 삭제를 원하는 정보가 들어있는 테이블명
+{% endhighlight %}
+
+
+#### SELECT
+{% highlight sql %}
+SELECT [ALL/DISTINCT] 칼럼명, 칼럼명, ...
+FROM 해당 칼럼들이 있는 테이블 명
+{% endhighlight %}
+* ALL
+    * DEFAULT 옵션이므로 별도로 표시하지 않아도 된다.
+    * 중복된 데이터가 있어도 모두 출력한다.
+* DISTINCT
+    * 중복된 데이터가 있는 경우 1건으로 처리해서 출력한다.
+
+
+#### 산술 연산자와 합성 연산자
+
+* 산술 연산자
+    * `()`: 연산자 우선순위를 변경하기 위한 괄호
+    * `*`: 곱하기
+    * `/`: 나누기
+    * `+`: 더하기
+    * `-`: 빼기
+
+* 합성연산자
+    * `||`: 문자열 두개를 연결(ORACLE)
+    * CONCAT(STRING1, STRING2)
+    
+---
+
+# TCL(Transaction Control Language)
+
+#### 트랜잭션
+트랜잭션은 데이터베이스의 논리적 연산단위이다. 
+트랜잭션이란 밀접히 관련되어 분리될 수 없는 한 개 이상의 데이터베이스 조작을 의미한다.
+
+* 원자성(atomicity)
+    * 트랜잭션에 정의된 연산들은 모두 성공적으로 실행되거나 전혀 실행되지 않은 상태로 남아있어야한다.
+    * all or nothing
+* 일관성(consistency)
+* 고립성(isolation)
+    * 트랜잭션이 실행되는 도중에 다른 트랜잭션의 영향을 받아서는 안된다.
+* 지속성(durability)
+    * 트랜잭션이 성공적으로 수행되면 갱신한 데이터베이스의 내용은 영구적으로 저장된다.
+    
+#### COMMIT
+입력한 자료나 수정한 자료에 대해서 또는 삭제한 자료에 대해서 전혀 문제가 없다고 판단되었을 경우 COMMIT 명령어를 통해서 트랜잭션을 완료할 수 있다.
+COMMIT이나 ROLLBACK 이전의 데이터 상태는 다음과 같다.
+
+* 단지 메모리 BUFFER에만 영향을 받았기 때문에 데이터의 변경 이전 상태로 복구 가능하다.
+* 현재 사용자는 SELECT 문장으로 결과를 확인 가능하다
+* 다른 사용자는 현재 사용자가 수행한 명령의 결과를 볼 수 없다.
+* 변경된 행은 잠금이 설정되어서 다른 사용자가 변경할 수 없다.
+
+COMMIT 명령어는 DML 문장 사용 후에 변경 작업이 완료되었음을 데이터베이스에 알려주기 위해 사용한다.
+COMMIT 이후의 데이터 상태는 다음과 같다.
+
+* 데이터에 대한 변경 사항이 데이터베이스에 반영된다.
+* 이전 데이터는 영원히 잃어버리게 된다.
+* 모든 사용자는 결과를 볼 수 있다
+* 관련된 행에 대한 잠금이 풀리고, 다른 사용자들이 행을 조작할 수 있게 된다.
+
+#### ROLLBACK
+테이블 내 입력한 데이터나, 수정한 데이터, 삭제한 데이터에 대하여 COMMIT 이전에는 변경 사항을 취소할 수 있다.
+ROLLBACK 후의 데이터 상태는 다음과 같다.
+
+* 데이터에 대한 변경 사항은 취소된다.
+* 이전 데이터는 다시 재저장된다.
+* 관련된 행에 대한 잠금(LOCKING)이 풀리고, 다른 사용자들이 행을 조작할 수 있게 된다.
+
+COMMIT와 ROLLBACK을 사용함으로써 다음과 같은 효과를 볼 수 있다.
+
+* 데이터 무결성 보장
+* 영구적인 변경을 하기 전에 데이터의 변경 사항 확인 가능
+* 논리적인 연관된 작업을 그룹핑하여 처리 가능
+
+#### SAVEPOINT
+저장점을 정의하면 롤백할 대 트랜잭션에 포함된 전체 작업을 롤백하는 것이 아니라 현 시점에서 저장점까지 트랜잭션의 일부만 롤백할 수 있다.
+복수의 저장점을 저장할 수 있으며, 동일이름으로 저장점을 정의했을 때는 나중에 정의한 저장점이 유효하다.
+
+{% highlight sql %}
+SAVEPOINT SVPT1;
+ROLLBACK TO SVPT1;
+{% endhighlight %}
+
+#### 트랜잭션 정리
+
+* DDL 문장을 싫앵하면 그 전후 시점에 자동으로 커밋된다.
+* DML 문장 이후에 커밋 없이 DDL문장이 실행되면 DDL 수행전에 자동으로 커밋된다.
+* 데이터베이스를 정상적으로 접속 종료하면 자동으로 트랜잭션이 커밋된다.
+* 어플리케이션의 이상 종료로 데이터베이스와의 접속이 단절되었을 때는 트랜잭션이 자동으로 롤백된다.
+
+---
+
+# WHERE 절
+
+#### WHERE 조건절 개요
+{% highlight sql %}
+SELECT [DISTINCT/ALL] 칼럼명 [ALIAS명]
+FROM 테이블명
+WHERE 조건식;
+{% endhighlight %}
+
+WHERE 절은 FROM 절 다음에 위치하며, 조건식은 아래 내용으로 구성된다.
+
+* 칼럼(Column)명 (보통 조건식의 좌측에 위치)
+* 비교 연산자
+* 문자, 숫자, 표현식 (보통 조건식의 우측에 위치)
+* 비교 칼럼명 (JOIN 사용시)
+
+#### 연산자의 종류
+
+* 비교 연산자
+    * `=`, `>`. `>=, `<`, `<=`
+* SQL 연산자
+    * BETWEEN a AND b
+    * IN (list)
+    * LIKE '비교문자열'
+    * IS NULL
+* 논리 연산자
+    * AND
+    * OR
+    * NOT
+* 부정 비교 연산자
+    * `!=`, `^=`, `<>`, `NOT 칼럼명 =`, `NOT 칼럼명 >`
+* 부정 SQL 연산자
+    * NOT BETWEEN a AND b
+    * NOT IN (list)
+    * IS NOT NULL
+
+#### 비교 연산자
+
+문자 유형간의 비교 조건이 발생하는 경우는 다음과 같이 처리한다.
+
+* 비교 연산자의 양쪽이 모두 CHAR 유형일 때
+    * 길이가 서로 다른 CHAR형 타입이면 작은 쪽에 SPACE를 추가하여 길이를 같게 한 후 비교한다.
+    * 서로 다른 문자가 나올 때까지 비교한다.
+    * 달라진 첫 번째 문자의 값에 따라 크기를 결정한다.
+    * BLANK의 수만 다르다면 서로 같은 값으로 결정한다.
+* 비교 연산자의 어느 한 쪽이 VARCHAR 유형 타입인 경우
+    * 서로 다른 문자가 나올 때까지 비교한다.
+    * 길이가 다르다면 짧은 것이 끝날 때까지만 비교한 후에 길이가 긴 것이 크다고 판단한다.
+    * 길이가 같고 다른 것이 없다면 같다고 판단한다.
+    * VARCHAR는 NOT NULL까지 길이를 말한다.
+* 상수값과 비교할 경우
+    * 상수 쪽을 변수 타입과 동일하게 바꾸고 비교한다.
+    * 변수 쪽이 CHAR 유형 타입이면 위의 CHAR 유형 타입의 경우를 적용한다.
+    * 변수 쪽이 VARCHAR 유형 타입이면 위의 VARCHAR 유형 타입의 경우를 적용한다.
+
+---
+
+# 함수
+
+#### 날짜형 함수
+
+현재 날짜와 시각을 출력
+
+* SYSDATE / GETDATE()
+
+날짜 데이터에서 년/월/일 데이터를 출력
+
+* EXTRACT('YEAR'\|'MONTH'\|'DAY' from d) / DATEPART('YEAR'\|'MONTH'\|'DAY',d)
+
+날짜데이터에서 년/월/일 데이터를 출력
+
+* TO_NUMBER(TO_CHAR(d,'yyyy')) / YEAR(d)
+* TO_NUMBER(TO_CHAR(d,'MM')) / MONTH(d)
+* TO_NUMBER(TO_CHAR(d,'DD')) / DAY(d)
+
+#### 변환형 함수
+
+* TO_NUMBER(문자열): 문자열을 숫자로 변환
+* TO_CHAR(숫자\|날짜 [, FORMAT]): 숫자나 날짜를 주어진 FORMAT 형태로 문자열 타입으로 변환 
+* TO_DATE(문자열 [, FORMAT]): 문자열을 주어진 FORMAT 형태로 날짜 타입으로 변환
+
+#### CASE 표현
+{% highlight sql %}
+CASE
+    SIMPLE_CASE_EXPRESSION 조건 or SEARCHED_CASE_EXPRESSION 조건
+    ELSE 표현절
+END
+{% endhighlight %}
+
+----
+
+# GROUP BY, HAVING 절
+
+#### 집계 함수(Aggregate Function)
+
+* 여러 행들의 그룹이 모여서 그룹당 단 하나의 결과를 돌려주는 함수
+* GROUP BY 절은 행들을 소그룹화
+* SELECT 절, HAVING 절, ORDER BY 절에 사용 가능
+
+{% highlight sql %}
+집계 함수명 ( [DISTINCT | ALL] 칼럼이나 표현식)
+{% endhighlight %}
+
+* `COUNT(*)`: NULL 값을 포함한 행의 수를 출력한다.
+* `COUNT(표현식)`: 표현식의 값이 NULL 값인 것을 제외한 행의 수를 출력한다. 
+* `SUM([DISTINCT\|ALL] 표현식)`: 표현식의 NULL 값을 제외한 합계를 출력한다.
+* `AVG([DISTINCT\|ALL] 표현식)`: 표현식의 NULL 값을 제외한 평균을 출력한다.
+* `MAX([DISTINCT\|ALL] 표현식)`: 표현식의 최대값을 출력한다.
+* `MIN([DISTINCT\|ALL] 표현식)`: 표현식의 최소값을 출력한다.
+* `STDDEV([DISTINCT\|ALL] 표현식)`: 표현식의 표준 편차를 출력한다.
+* `VARIAN([DISTINCT\|ALL] 표현식)`: 표현식의 분산을 출력한다.
+
+#### GROUP BY 절
+
+{% highlight sql %}
+SELECT [DISTINCT | ALL] 칼럼명 [ALIAS명]
+FROM 테이블명
+[WHERE 조건식]
+[GROUP BY 칼럼(Column)이나 표현식]
+[HAVING 그룹조건식];
+{% endhighlight %}
+
+GROUP BY 절과 HAVING 절은 다음과 같은 특성을 가진다.
+
+* GROUP BY 절을 통해 소그룹별 기준을 정한 후, SELECT 절에 집계 함수를 사용한다.
+* 집계 함수의 통계 정보는 NULL 값을 가진 행을 제외하고 수행한다.
+* GROUP BY 절에서는 SELECT 절과는 달리 ALIAS 명을 사용할 수 없다.
+* 집계 함수는 WHERE 절에는 올 수 없다.
+  (집계 함수를 사용할 수 있는 GROUP BY 절보다 WHERE 절이 먼저 수행된다.)
+* WHERE 절은 전체 데이터를 GROUIP으로 나누기 전에 행들을 미리 제거시킨다.
+* HAVING 절은 GROUP BY 절의 기준 항목이나 소그룹의 집계 함수를 이용한 조건을 표시할 수 있다.
+* GROUP BY 절에 의한 소그룹별로 만들어진 집계 데이터 중, HAVING 절에서 제한 조건을 두어 조건을 만족하는 내용만 출력한다.
+* HAVING 절은 일반적으로 GROUP BY 절에는 언급되어 있지 않다.
+
+#### HAVING 절
+
+FROM 절에 정의된 집합의 개별 행에 WHERE 절의 조건절이 먼저 적용된다. 
+WHERE 절의 조건에 맞는 행이 GROUP BY 절의 대상이 된다.
+그 다음 결과 집합의 행에 HAVING 조건절이 적용된다. 
+즉 HAVING 절은 WHERE 절과 비슷하지만 그룹을 나타내는 결과 집합의 행에 조건이 적용된다는 점에서 차이가 있다.
+
+---
+
+# ORDER BY 절
+
+#### ORDER BY 정렬
+{% highlight sql %}
+SELECT [DISTINCT | ALL] 칼럼명 [ALIAS명]
+FROM 테이블명
+[WHERE 조건식]
+[GROUP BY 칼럼(Column)이나 표현식]
+[HAVING 그룹조건식]
+[ORDER BY 칼럼(Column)이나 표현식 [ASC 또는 DESC]; 
+{% endhighlight %}
+
+* 기본적인 정렬 순서는 오름차순(ASC)이다.
+* 숫자형 데이터 타입은 오름차순으로 정렬했을 경우에 가장 작은 값부터 출력된다.
+* 날짜형 데이터는 오름차순으로 정렬했을 경우 날짜 값이 가장 빠른 값이 먼저 출력된다.
+
+#### SELECT 문장 실행 순서
+{% highlight sql %}
+5. SELECT [DISTINCT | ALL] 칼럼명 [ALIAS명]
+1. FROM 테이블명
+2. [WHERE 조건식]
+3. [GROUP BY 칼럼(Column)이나 표현식]
+4. [HAVING 그룹조건식]
+6. [ORDER BY 칼럼(Column)이나 표현식 [ASC 또는 DESC]; 
+{% endhighlight %}
+
+1. 발췌 대상 테이블을 참조한다. (FROM)
+2. 발췌 대상 데이터가 아닌 것은 제거한다. (WHERE)
+3. 행들을 소그룹화 한다. (GROUP BY)
+4. 그룹핑된 값의 조건에 맞는 것만을 출력한다. (HAVING)
+5. 데이터 값을 출력/계산한다. (SELECT)
+6. 데이터를 정렬한다. (ORDER BY)
+
+---
+
+출처: `"SQL 전문가 가이드, 2013 Edition", 서강수, 한국데이터베이스진흥원, 2013` 
