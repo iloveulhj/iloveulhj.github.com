@@ -244,7 +244,7 @@ FROM   EMP;
 {% endhighlight %}
 * PERCENT_RANK 함수를 이용해 파티션별 윈도우에서 제일 먼저 나오는 것을 0으로, 제일 늦게 나오는 것을 1로 하여, 값이 아닌 행의 순서별 백분율을 구한다.
 
-COUNT_DIST 함수
+CUME_DIST 함수
 {% highlight sql %}
 SELECT DEPTNO, ENAME, SAL,
     CUME_DIST() OVER (PARTITION BY DEPTNO ORDER BY SAL DESC) as CUME_DIST
