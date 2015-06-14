@@ -2,7 +2,7 @@
 layout: post
 title:  "[Redis] 기초 설정"
 date:   2015-01-25 00:00:00
-categories: jekyll update
+categories: posts redis
 ---
 
 ## info 명령의 그룹 정보

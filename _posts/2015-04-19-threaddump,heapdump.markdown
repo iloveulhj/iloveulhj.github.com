@@ -2,7 +2,7 @@
 layout: post
 title:  "[Java] Threaddump, Heapdump"
 date:   2015-04-19 00:00:00
-categories: jekyll update
+categories: posts java
 ---
 
 # Head dump, Thread dump

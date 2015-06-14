@@ -2,7 +2,7 @@
 layout: post
 title:  "[HTTP] Cookie"
 date:   2015-03-08 00:00:00
-categories: jekyll update
+categories: posts http
 ---
 
 이 포스트는 "HTTP 완벽가이드"의 "11장, 클라이언트 식별과 쿠키"의 일부 내용을 정리한 내용입니다.

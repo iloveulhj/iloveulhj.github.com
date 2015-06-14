@@ -10,5 +10,11 @@ copyright:
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://iloveulhj.github.io"
 github_username:  iloveulhj
+
+# URL setting
+permalink: none
+
 # Build settings
 markdown: kramdown
+
+

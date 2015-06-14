@@ -2,7 +2,7 @@
 layout: post
 title:  "[SQL] 데이터 모델링의 이해"
 date:   2015-05-10 00:00:00
-categories: jekyll update
+categories: posts sql
 ---
 
 이 포스트는 "SQL 전문가 가이드"의 "1장. 데이터 모델링의 이해"를 학습한 내용으로 이루어져 있습니다. 

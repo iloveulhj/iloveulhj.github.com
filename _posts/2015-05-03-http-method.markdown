@@ -2,7 +2,7 @@
 layout: post
 title:  "[HTTP] Method"
 date:   2015-05-03 00:00:00
-categories: jekyll update
+categories: posts http
 ---
 
 이 포스트는 "HTTP 완벽 가이드"의 "3장.HTTP 메시지"의 일부를 정리한 내용으로 이루어져 있습니다. 

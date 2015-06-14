@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "[IDE]  Eclipse 성능 최적화"
+title:  "[Eclipse] Eclipse 성능 최적화"
 date:   2015-02-22 00:00:00
-categories: jekyll update
+categories: posts eclipse
 ---
 
 이 포스트는 [SLiPP 스터디](http://www.slipp.net/wiki/pages/viewpage.action?pageId=5177633)의 위키 페이지에 정리된 내용입니다.

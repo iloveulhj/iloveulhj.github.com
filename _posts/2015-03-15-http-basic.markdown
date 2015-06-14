@@ -2,7 +2,7 @@
 layout: post
 title:  "[HTTP] 기초"
 date:   2015-03-15 00:00:00
-categories: jekyll update
+categories: posts http
 ---
 
 이 포스트는 "HTTP 완벽가이드"의 "1장, HTTP 개관"을 정리한 내용입니다.

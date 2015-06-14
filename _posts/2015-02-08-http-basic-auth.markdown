@@ -2,7 +2,7 @@
 layout: post
 title:  "[HTTP] 기본 인증"
 date:   2015-02-08 00:00:00
-categories: jekyll update
+categories: posts http
 ---
 
 이 포스트는 "HTTP 완벽가이드"의 "12장, 기본 인증"을 정리한 내용입니다.

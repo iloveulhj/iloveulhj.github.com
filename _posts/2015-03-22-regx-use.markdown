@@ -2,7 +2,7 @@
 layout: post
 title:  "[정규표현식] 정규표현식 활용하기"
 date:   2015-03-22 00:00:00
-categories: jekyll update
+categories: posts regx
 ---
 
 대량의 텍스트로 이루어진 데이터를 다루어야 할 경우가 있다.  

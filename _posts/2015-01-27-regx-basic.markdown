@@ -2,7 +2,7 @@
 layout: post
 title:  "[정규표현식] 기초"
 date:   2015-01-27 00:00:00
-categories: jekyll update
+categories: posts regx
 ---
 
 정규표현식이란, 검색에서 사용할 매칭되는 같은 문자들의 패턴을 말한다.

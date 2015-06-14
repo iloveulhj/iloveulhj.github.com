@@ -2,7 +2,7 @@
 layout: post
 title:  "[Article]  HTTP/2 finished, coming to browsers within weeks"
 date:   2015-02-22 00:00:00
-categories: jekyll update
+categories: posts http
 ---
 
 이 포스트는 [http://arstechnica.com/](http://arstechnica.com/information-technology/2015/02/http2-finished-coming-to-browsers-within-weeks/)에 올라온 기사를 번역한 내용입니다.  

@@ -2,7 +2,7 @@
 layout: post
 title:  "[리눅스] Cron"
 date:   2015-03-29 00:00:00
-categories: jekyll update
+categories: posts linux
 ---
 
 * Cron은 수퍼유저용 / 일반유저용 스케줄러

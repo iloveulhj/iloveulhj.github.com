@@ -2,7 +2,7 @@
 layout: post
 title:  "[Java] Arrays.asList"
 date:   2015-04-05 00:00:00
-categories: jekyll update
+categories: posts java
 ---
 
 ## Arrays.asList

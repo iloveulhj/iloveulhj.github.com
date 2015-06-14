@@ -2,7 +2,7 @@
 layout: post
 title:  "[Spring] dispatcherServlet"
 date:   2014-10-06 00:00:00
-categories: jekyll update
+categories: posts spring
 ---
 
 ### Java의 서블릿입니다.

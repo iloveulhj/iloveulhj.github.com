@@ -2,7 +2,7 @@
 layout: post
 title:  "[Spring] @Async"
 date:   2015-04-12 00:00:00
-categories: jekyll update
+categories: posts spring
 ---
 
 # Spring @Async

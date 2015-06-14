@@ -2,7 +2,7 @@
 layout: post
 title:  "[Java] Collections.sort"
 date:   2014-09-30 00:00:00
-categories: jekyll update
+categories: posts java
 ---
 
 #  정렬 알고리즘의 선택

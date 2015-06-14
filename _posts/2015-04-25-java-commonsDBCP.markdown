@@ -2,7 +2,7 @@
 layout: post
 title:  "[Java] Commons DBCP 이해하기"
 date:   2015-04-25 00:00:00
-categories: jekyll update
+categories: posts java
 ---
 
 이 포스트는 "네이버를 만든 기술, 읽으면서 배운다 - 자바편"의 "17.Commons DBCP 이해하기"를 정리한 내용입니다. 

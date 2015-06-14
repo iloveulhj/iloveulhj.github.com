@@ -2,7 +2,7 @@
 layout: post
 title:  "[JAVA] 스트림 API"
 date:   2015-05-20 00:00:00
-categories: jekyll update
+categories: posts java
 ---
 
 이 포스트는 "가장 빨리 만나는 자바8"의 "2장. 스트림 API"를 학습한 내용으로 이루어져 있습니다. 
