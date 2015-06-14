@@ -1,0 +1,250 @@
+---
+layout: post
+title:  "[JAVA] Ant"
+date:   2015-06-13 00:00:00
+categories: jekyll update
+---
+
+# Ant
+
+최근에 Ant와 Ivy를 사용하는 프로젝트들을 처음 접하게 되었다. 
+Ant와 Ivy는 자바 프로젝트의 빌드, 라이브러리(의존성) 관리를 도와주는 도구이다.
+간단하게 찾아본 바로는 최근 자바 진영에서 많이 사용하는 Maven, Gradle의 이전 모델로 생각된다.
+Ant와 Ivy 사용 방법을 습득하면서, 이 도구들이 가진 장단점과 철학을 이해하고 기술의 발전 방향을 생각해보았으면 한다. 
+
+#### Ant의 실행
+
+{% highlight bash %}
+ant [옵션] [타겟 [타겟2 [타겟3] ...]]
+{% endhighlight %}
+
+* ant를 실행하면 build.xml 파일을 현재 디렉토리부터 시작해서 상위 디렉토리로 이동해가면서 검색 후 실행한다.
+* build.xml 파일이 발견되면 Ant는 build.xml 파일을 분석하여 build.xml 파일에 정의되어 있는 태스크에 따라 알맞은 배치 작업을 수행한다.
+
+#### Ant의 특징
+
+* 자바 기반의 빌드툴로 플랫폼에 독립적으로 실행
+* XML 기반 설정 파일 사용(build.xml)
+* 미리 정의된 테스크를 사용하여 배치 작업을 빠르게 설정 가능
+
+#### 빌드파일
+Ant는 어플리케이션을 빌드, 테스트, 배치를 기술하기 위해 빌드파일을 사용한다.
+
+* 프로젝트, 타겟, 테스크등을 XML 형식의 빌드파일에 선언적으로 작성한다.
+* 빌드 전체 과정을 기술하는 것이 아니라 각각 단계를 선언하는 방식으로 되어 재사용, 유지보수가 편리하다.
+
+* 스크립트 사용 예제
+	* A typical scenario: compile, document, package, and deploy
+	* ["Java Development with Ant", Erik Hatcher, Steve Loughran ,Manning Publications Co., 2003](http://www.manning.com/hatcher/)
+{% highlight xml %}
+<?xml version="1.0" ?>
+<project name="Our Project" default="deploy">
+
+	<target name="init">
+		<mkdir dir="build/classes" />
+		<mkdir dir="dist" />
+	</target>
+
+	<target name="compile" depends="init" >
+		<javac srcdir="src" destdir="build/classes" />
+	</target>
+
+	<target name="doc" depends="init" >
+		<javadoc destdir="build/classes" sourcepath="src" packagenames="org .*" />
+	</target>
+
+	<target name="deploy" depends="compile ,doc" >
+		<jar destfile="dist/project.jar " basedir="build/classes "/>
+		<ftp server="${server.name}" userid="${ftp.username}" password="${ftp.password}">
+			<fileset dir="dist"/>
+		</ftp>
+	</target>
+
+</project>
+{% endhighlight %}
+
+* project element
+	* All build files requires the project element and at least one target element.
+
+| **Attributes** | **Description** |
+| Name | The Name of the project (Optional) |
+| default | The default target for the build script. This attribute specifies which target should be considered as the default (Mandatory) |  
+| basedir | The base directory (or) the root folder for the project (Optional) |
+
+* target element
+
+| **Attributes** | **Description** |
+| name | The name of the target (Required) |
+| depends | comma separated list of all targets that this target depends on (Optional) |
+| description | A short description of the target (Optional) |
+| if | Allow the execution of a target based on the trueness of a conditional attribute (Optional) |
+| unless | Adds the target to the dependency list of the specified Exetension Point. An Extension Point is similar to a target, but it does not have any tasks (Optional) |
+
+
+{% highlight bash %}
+  ant [옵션] [타겟 [타겟2 [타겟3] ...]]
+{% endhighlight %}
+
+#### 프로퍼티
+빌드 파일은 XML으로 작성되어 프로그래밍 언어처럼 변수를 선언하는 것을 허용하지 않는다.
+하지만 Ant는 property element를 통하여 프로젝트 이름, 소스 디렉토리 등을 편하게 관리할 수 있도록 해준다.
+
+* Ant predifined properties
+
+| **Properties** | **Description** |
+| ant.file | The full locaton of the build file |
+| ant.version | The version of the Apache Ant installation |
+| basedir | the basedir of the build, as specified in the basedir attribute of the project element |
+| ant.java.version | The version of the JDK that is used by Ant |
+| ant.project.name | The name of the project, as specified in the name attribute of the project element |
+| ant.project.default-target | The default target of the current project |
+| ant.project.invoked-targets | Comma separated list of the targets that were invoked in the current project |
+| ant.core.lib | The full location of the Ant jar file |
+| ant.home | The home directory of Ant installation |
+| ant.library.dir | The hom directory for Ant library files - typically ANT_HOME/lib folder | 
+
+* Property 사용 예제
+	* ["Learn Apache Ant", www.tutorialspoint.com](http://www.tutorialspoint.com/ant/)
+{% highlight xml%}
+<?xml version="1.0"?>
+
+<project name="Hello World Project" default="info">
+	<property name="sitename" value="www.tutorialspoint.com"/>
+	
+	<target name="info">
+		<echo>Apache Ant version is ${ant.version} - You are at ${sitename} </echo>
+	</target>
+</project>
+{% endhighlight %}
+
+{% highlight bash %}
+> ant
+Buildfile: iloveulhj/ant/build.xml
+
+info:
+	[echo] Apache Ant version is Apache Ant(TM) version 1.8.2
+	compiled on December 20 2010 - You are at www.tutorialspoint.com
+	
+BUILD SUCCESSFUL
+Total time: 0 seconds
+{% endhighlight %}
+
+#### Data type - pattern
+Ant에서는 `?`, `*`, `**`를 이용한 패턴을 이용할 수 있다.
+
+* `?`: Matches one character only
+* `*`: Matches zero or many characters
+* `**`: Matches zero or many directories recursively
+* Pattern 사용 예제
+	* ["Learn Apache Ant", www.tutorialspoint.com](http://www.tutorialspoint.com/ant/)
+{% highlight xml%}
+<!-- Fileset -->
+<fileset dir="${src}" casesensitive="yes">
+	<include name="**/*.java"/>
+	<exclude name="**/*Stub*"/>
+</fileset>
+
+<!-- Patternset -->
+<patternset id="java.files.without.stubs">
+	<include name="src/**/*.java"/>
+	<exclude name="src/**/*Stub*"/>
+</patternset>
+
+<fileset dir="${src}" casesensitive="yes">
+	<patternset refid="java.files.without.stubs"/>
+</fileset>
+
+<!-- Filelist -->
+<filelist id="config.files" dir="${webapp.src.folder}">
+	<file name="applicationConfig.xml"/>
+	<file name="faces-config.xml"/>
+	<file name="web.xml"/>
+	<file name="portlet.xml"/>
+</filelist>
+
+<!-- Filterset -->
+<copy todir="${output.dir}">
+	<fileset dir="${releasenotes.dir}" includes="**/*.txt"/>
+	<filterset>
+		<filter token="VERSION" value="${current.version}"/>
+	</filterset>
+</copy>
+
+<!-- Path -->
+<path id="build.classpath.jar">
+	<pathelement path="${env.J2EE_HOME}/${j2ee.jar}"/>
+	<fileset dir="lib">
+		<include name="**/*.jar"/>
+	</fileset>
+</path>
+{% endhighlight %}
+
+#### Junit Integration
+
+JUnit은 자바 기반 개발의 테스트 프레임워크이다.
+Ant는 Junit task를 지원한다. 
+
+* The attributes of the JUnit task 
+
+| **Properties** | **Description** |
+| dir | Where do invoke the VM from. This is ignored when fork is disabled |
+| jvm | Command used to invoke the JVM. This is ignored when fork is disabled |
+| fork | Runs the test in a separate JVM |
+| errorproperty | The name of the property to set if there is a Junit error | 
+| failureproperty | The name of the property to set if there is a Junit failure |
+| haltonerror | Stops execution when a test error occurs |
+| haltonfailure | Stops execution when a failure occurs |
+| printsummary | Advises Ant to display simple statistics for each test |
+| showoutput | Advises Ant to send the output to its logs and formatters |
+| tempdir | Path to the temporary file that Ant will use |
+| timeout | Exits the tests that take longer to run than this setting (in milliseconds) |
+
+* JUnit 사용 예제
+	* ["Learn Apache Ant", www.tutorialspoint.com](http://www.tutorialspoint.com/ant/)
+{% highlight xml %}
+<target name="unittest">
+	<junit haltonfailure="true" printsummary="true">
+		<test name="com.tutorialspoint.UtilsTest"/>
+	</junit>
+</target>
+{% endhighlight %}
+{% highlight bash %}
+test:
+[echo] Testing the application
+[junit] Running com.tutorialspoint.UtilsTest
+[junit] Tests run: 12, Failures: 0, Errors: 0, Time elapsed: 16.2 sec
+BUILD PASSED
+{% endhighlight %}
+
+
+
+#### Etc...
+이외에도 ant를 통해 다음과 같은 일들을 진행할 수 있다.
+
+* jar 패키징
+* war 패키징
+* javadoc 생성
+* java 코드 실행
+* dploying applacaiton
+
+간단하게 문서만을 살펴본 바로는 Maven을 통해서 할 수 있는 일들 대부분(라이브러리 관리 제외)을 Ant에서도 할 수 있는 것으로 보인다.
+빌드 도구로서 Maven은 compile, test, package와 같은 라이프사이클, 기본적인 규칙이 존재하여 쉽게 구현이 가능한 반면,
+Ant는 프로젝트의 빌드 과정을 빌드파일에 모두 기술해야 하는 것으로 보인다. 
+물론 똑똑한 개발자 분들이 만들어 놓은 다른 도구([EasyAnt](http://ant.apache.org/easyant/index.html))를 이용하여 쉽게 빌드 하는 방법도 있는 것으로 보인다. 
+
+Maven을 이용해 빌드 과정을 다양하게 세팅하다보면 기본 제공 템플릿과 커스터마이징한 부분들이 뒤섞여 빌드 과정을 이해하기 어려운 경우가 있다.
+빌드 과정의 경우가 복잡한 경우, 빌드 파일에 명확하게 과정이 드러나는 Ant의 방식이 더 좋을 수도 있을 것 같다.
+
+Ant와 Maven 모두 전문적으로 사용해본적이 없어 각 빌드 도구들의 정확한 비교는 어렵고 느낌만을 기술하였다.
+내가 느낀 차이가 다른 개발자분들과 비슷할까라는 생각에 간단히 구글링한 결과 비슷한 글들이 있어 첨부한다. 
+
+* [http://books.sonatype.com/mvnref-book/reference/installation-sect-compare-ant-maven.html](http://books.sonatype.com/mvnref-book/reference/installation-sect-compare-ant-maven.html)
+* [http://blog.embian.com/32](http://blog.embian.com/32)
+
+--- 
+
+출처
+
+* ["Ant를 이용한 어플리케이션 빌드 과정의 자동화!", javacan.tistory.com](http://javacan.tistory.com/56)
+* ["Learn Apache Ant", www.tutorialspoint.com](http://www.tutorialspoint.com/ant/)
+* ["Java Development with Ant", Erik Hatcher, Steve Loughran ,Manning Publications Co., 2003](http://www.manning.com/hatcher/)
