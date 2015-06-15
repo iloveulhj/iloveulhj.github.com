@@ -16,7 +16,7 @@ var me = {
 {% highlight javascript %}
 200703 - 201408
 Ajou Univ. Media Dept.
-201409 -
+201407 -
 NHN Ent.
 {% endhighlight %}
 
