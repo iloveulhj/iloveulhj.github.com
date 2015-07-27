@@ -26,7 +26,7 @@ categories: posts sql
 
 * 규칙 기반 옵티마이저
 	* Rule-Based Optimizer, Heuristic Optimizer 
-	* 미리 정해 놓은 규칙에 따라 액세스 경로를 평가하고 실행 계호기을 선택
+	* 미리 정해 놓은 규칙에 따라 액세스 경로를 평가하고 실행 계획을 선택
 * 비용기반 옵티마이저
 	* Cost-Based Optimizer
 	* 여러 통계 정보를 기초로 오퍼레이션 단계 별 예상 비용을 산정, 합산한 총비용이 가장 낮은 계획을 선택
@@ -43,7 +43,7 @@ categories: posts sql
  이 과정에서 Syntex, Sematic check가 이루어짐
 * Optimizer
 	* Query Transformer: 파싱된 SQL을 표준적인 형태로 변환
-	* Estimator: 오브젝트 및 시스템 통계정보를 이용해 실행계획 전체에 대한 총 비용을 계싼
+	* Estimator: 오브젝트 및 시스템 통계정보를 이용해 실행계획 전체에 대한 총 비용을 계산
 	* Plan Generator: 후보군이 될만한 실행계획들을 생성
 * Row-Source Generator: 옵티마이저가 생성한 실행계획을 SQL 엔진이 실행할 수 있는 코드 형태로 변환
 * SQL Engine: SQL을 실행
