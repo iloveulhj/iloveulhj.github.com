@@ -2,7 +2,7 @@
 layout: post
 title:  "[Maven] 기초"
 date:   2015-02-08 00:00:00
-categories: posts java
+categories: posts maven
 ---
 
 #메이븐 설정 파일

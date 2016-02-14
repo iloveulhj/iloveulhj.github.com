@@ -15,7 +15,7 @@ categories: posts spring
 # 실행 환경  
 **TaskExecutor**  
 java.util.concurrent.Executor과 같은 인터페이스  
-쓰레드 풀을 이용할 때 java5에 대한 요구사항을 추상하하기 위해 이용  
+쓰레드 풀을 이용할 때 java5에 대한 요구사항을 추상화하기 위해 이용  
 spring에서 task namespace를 이용해 손쉽게 TaskExecutor bean을 등록할 수 있음  
 {% highlight xml%}
 <task:executor id="taskExecutor" pool-size="5"  />
